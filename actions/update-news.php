@@ -1,4 +1,8 @@
 <?php
+require_once('../helpers.php');
+if (!checkUser()) {
+    header('Location: /login.php');
+}
 require_once('../config.php');
 
 $host = '127.0.0.1';

@@ -20,8 +20,10 @@ try {
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-$query = 'SELECT * FROM menu';
-$stmt = $pdo->query($query);
+$query = 'SELECT * FROM categories WHERE id=:id';
+$stmt = $pdo->prepare($query);
+$stmt->execute(['id' => $_GET['id']]);
+$single_row = $stmt->fetch();
 
 ?>
 <!doctype html>
@@ -66,58 +68,52 @@ require_once('../views/sidebar.php')
         <div class="ui breadcrumb">
             <a href="/admin/index.php" class="section">Home</a>
             <div class="divider"> / </div>
-            <div class="section active">Menu Items</div>
+            <a href="/admin/news.php" class="section">News</a>
+            <div class="divider"> / </div>
+            <div class="active section"><?php echo $single_row['id'] ?></div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-12">
-                <div>
-                    <h3 class="ui left floated header">Menu Items</h3>
-                    <h5 class="ui right floated header">
-                        <a href="/admin/add-item.php"><i class="plus icon"></i>Add Item</a>
-                    </h5>
+            <div class="col-md-8">
+                <div class="ui segment">
+                    <form class="ui form" action="/actions/update-category.php?id=<?php echo $single_row['id'] ?>" method="post">
+                        <div class="field">
+                            <label for="title">Title</label>
+                            <input type="text" name="title" id="title" required value="<?php echo $single_row['title'] ?>">
+                        </div>
+                        <div class="field">
+                            <label for="slug">Slug</label>
+                            <input type="text" name="slug" id="slug" required value="<?php echo $single_row['slug'] ?>">
+                        </div>
+                        <button class="ui primary button">Save</button>
+                    </form>
                 </div>
-                <table class="ui table">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th style="width: 200px;">Image</th>
-                        <th>Status</th>
-                        <th>Category</th>
-                        <th>Created At</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    while ($row = $stmt->fetch()) {
-                        ?>
-                        <tr>
-                            <td><?php echo $row['id'] ?></td>
-                            <td><?php echo $row['title'] ?></td>
-                            <td><?php echo $row['price'] ?></td>
-                            <td><?php echo $row['description'] ?></td>
-                            <td>
-                                <img class="img-fluid img-thumbnail" src="<?php echo $row['image_url'] ?>" alt="">
-                            </td>
-                            <td><?php echo $row['display_status'] ?></td>
-                            <td><?php echo $row['category_id'] ?></td>
-                            <td><?php echo $row['created_at'] ?></td>
-                            <td>
-                                <a href="/admin/edit-item.php?id=<?php echo $row['id'] ?>" title="Edit"><i class="edit icon"></i></a>
-                                <a href="/admin/delete-item.php?id=<?php echo $row['id'] ?>" title="Delete"><i class="trash red icon"></i></a>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
 </div>
+<script>
+    Dropzone.autoDiscover = false;
+    new Dropzone('#imageDropzone',
+        {
+            url: "/actions/upload.php",
+            paramName: "upload",
+            maxFiles: 1,
+            acceptedFiles: 'image/*',
+            addRemoveLinks: true,
+            maxfilesexceeded: function (file) {
+                this.removeAllFiles();
+                this.addFile(file);
+            },
+            success: function (file, response) {
+                $('#image_url').val(response.url);
+                $('#image_preview').attr('src', response.url);
+            },
+            removedfile: function (file) {
+                $('#image_preview').attr('src', '');
+                var _ref;
+                return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+            }
+        });
+</script>
 </body>
 </html>

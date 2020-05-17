@@ -3,7 +3,26 @@ require_once('../helpers.php');
 if (!checkUser()) {
     header('Location: /login.php');
 }
-require_once('../config.php')
+require_once('../config.php');
+
+$host = '127.0.0.1';
+$port = "3306";
+$charset = 'utf8mb4';
+
+$options = [
+    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+    \PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$dsn = sprintf("mysql:host=%s;dbname=%s;charset=%s;port=%s", $host, DB_NAME, $charset, $port);
+try {
+    $pdo = new \PDO($dsn, DB_USER, DB_PASSWORD, $options);
+} catch (\PDOException $e) {
+    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+}
+$query = 'SELECT * FROM categories';
+$stmt = $pdo->query($query);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -62,13 +81,28 @@ require_once('../views/sidebar.php')
                     <tr>
                         <th>#</th>
                         <th>Title</th>
-                        <th>Content</th>
-                        <th>Publish Date</th>
+                        <th>Slug</th>
+                        <th>Created At</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    <?php
+                    while ($row = $stmt->fetch()) {
+                        ?>
+                        <tr>
+                            <td><?php echo $row['id'] ?></td>
+                            <td><?php echo $row['title'] ?></td>
+                            <td><?php echo $row['slug'] ?></td>
+                            <td><?php echo $row['created_at'] ?></td>
+                            <td>
+                                <a href="/admin/edit-category.php?id=<?php echo $row['id'] ?>" title="Edit"><i class="edit icon"></i></a>
+                                <a href="/admin/delete-category.php?id=<?php echo $row['id'] ?>" title="Delete"><i class="trash red icon"></i></a>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
                     </tbody>
                 </table>
             </div>

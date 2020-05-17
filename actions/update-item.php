@@ -22,15 +22,24 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$query = 'INSERT INTO news (title, description, image_url) VALUES (?, ?, ?)';
+$display_status = 0;
+if ($_POST['display_status']) {
+    $display_status = $_POST['display_status'];
+}
+
+$query = 'UPDATE menu SET title=?, price=?, description=?, image_url=?, display_status=?, category_id=? WHERE id=?';
 $stmt = $pdo->prepare($query);
 try {
     $result = $stmt->execute([
         $_POST['title'],
+        $_POST['price'],
         $_POST['description'],
-        $_POST['image_url']
+        $_POST['image_url'],
+        $display_status,
+        $_POST['category_id'],
+        $_GET['id']
     ]);
-    header('Location: /admin/news.php');
+    header('Location: /admin/menu.php');
 } catch (PDOException $exception) {
     $previous = $_SERVER['HTTP_REFERER'];
     header('Location: ' . $previous);

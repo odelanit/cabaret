@@ -47,21 +47,21 @@ require_once('../views/sidebar.php')
         <div class="ui breadcrumb">
             <a href="/admin/index.php" class="section">Home</a>
             <div class="divider"> / </div>
-            <a href="/admin/news.php" class="section">News</a>
+            <a href="/admin/categories.php" class="section">Categories</a>
             <div class="divider"> / </div>
             <div class="active section">Add</div>
         </div>
         <div class="row mt-4">
             <div class="col-md-8">
                 <div class="ui segment">
-                    <form class="ui form" action="/actions/create-news.php" method="post">
+                    <form class="ui form" action="/actions/create-category.php" method="post">
                         <div class="field">
                             <label for="title">Title</label>
-                            <input type="text" name="title" id="title">
+                            <input type="text" name="title" id="title" required>
                         </div>
                         <div class="field">
-                            <label for="description">Content</label>
-                            <textarea name="description" id="description"></textarea>
+                            <label for="slug">Slug</label>
+                            <input type="text" name="slug" id="slug" required>
                         </div>
                         <button class="ui primary button">Save</button>
                     </form>

@@ -1,4 +1,10 @@
 <?php
+
+require_once('../helpers.php');
+if (!checkUser()) {
+    header('Location: /login.php');
+}
+
 $filename = $_FILES['upload']['name'];
 $file_type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 $check = getimagesize($_FILES["upload"]["tmp_name"]);

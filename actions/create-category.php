@@ -22,15 +22,14 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$query = 'INSERT INTO news (title, description, image_url) VALUES (?, ?, ?)';
+$query = 'INSERT INTO categories (title, slug) VALUES (?, ?)';
 $stmt = $pdo->prepare($query);
 try {
     $result = $stmt->execute([
         $_POST['title'],
-        $_POST['description'],
-        $_POST['image_url']
+        $_POST['slug']
     ]);
-    header('Location: /admin/news.php');
+    header('Location: /admin/categories.php');
 } catch (PDOException $exception) {
     $previous = $_SERVER['HTTP_REFERER'];
     header('Location: ' . $previous);

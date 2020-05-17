@@ -3,7 +3,6 @@ require_once('../helpers.php');
 if (!checkUser()) {
     header('Location: /login.php');
 }
-
 require_once('../config.php');
 
 $host = '127.0.0.1';
@@ -22,15 +21,15 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$query = 'INSERT INTO news (title, description, image_url) VALUES (?, ?, ?)';
+$query = 'UPDATE categories SET title=?, slug=? WHERE id=?';
 $stmt = $pdo->prepare($query);
 try {
     $result = $stmt->execute([
         $_POST['title'],
-        $_POST['description'],
-        $_POST['image_url']
+        $_POST['slug'],
+        $_GET['id']
     ]);
-    header('Location: /admin/news.php');
+    header('Location: /admin/categories.php');
 } catch (PDOException $exception) {
     $previous = $_SERVER['HTTP_REFERER'];
     header('Location: ' . $previous);

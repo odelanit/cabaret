@@ -22,15 +22,23 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$query = 'INSERT INTO news (title, description, image_url) VALUES (?, ?, ?)';
+$display_status = 0;
+if ($_POST['display_status']) {
+    $display_status = $_POST['display_status'];
+}
+
+$query = "INSERT INTO events (title, description, image_url, open_date, location, display_status) VALUES (?, ?, ?, STR_TO_DATE(?, '%m/%d/%Y'), ?, ?)";
 $stmt = $pdo->prepare($query);
 try {
     $result = $stmt->execute([
         $_POST['title'],
         $_POST['description'],
-        $_POST['image_url']
+        $_POST['image_url'],
+        $_POST['open_date'],
+        $_POST['location'],
+        $display_status,
     ]);
-    header('Location: /admin/news.php');
+    header('Location: /admin/events.php');
 } catch (PDOException $exception) {
     $previous = $_SERVER['HTTP_REFERER'];
     header('Location: ' . $previous);

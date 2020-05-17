@@ -80,6 +80,7 @@ require_once('../views/sidebar.php')
                     <tr>
                         <th>#</th>
                         <th>Title</th>
+                        <th style="width: 200px;">Image</th>
                         <th>Content</th>
                         <th>Publish Date</th>
                         <th>Actions</th>
@@ -92,6 +93,9 @@ require_once('../views/sidebar.php')
                         <tr>
                             <td><?php echo $row['id'] ?></td>
                             <td><?php echo $row['title'] ?></td>
+                            <td>
+                                <img class="img-fluid img-thumbnail" src="<?php echo $row['image_url'] ?>" alt="">
+                            </td>
                             <td><?php echo $row['description'] ?></td>
                             <td><?php echo $row['created_at'] ?></td>
                             <td>
