@@ -1,5 +1,22 @@
 <?php
 require('config.php');
+
+$host = '127.0.0.1';
+$port = "3306";
+$charset = 'utf8mb4';
+
+$options = [
+    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+    \PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$dsn = sprintf("mysql:host=%s;dbname=%s;charset=%s;port=%s", $host, DB_NAME, $charset, $port);
+try {
+    $pdo = new \PDO($dsn, DB_USER, DB_PASSWORD, $options);
+} catch (\PDOException $e) {
+    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,23 +32,6 @@ require('config.php');
 </head>
 
 <body id="bodyTop">
-
-    <!-- Cab Search Box Starts Here -->
-    <div class="cab-search-overlay">
-        <div class="cab-search-inner">
-            <div class="search-form">
-                <span class="close-search-overlay">
-                    <i class="ti-close"></i>
-                </span>
-                <form>
-                    <input type="text" placeholder="search here">
-                    <button type="submit" class="">Search</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Cab Search Box Ends Here -->
-
     <?php
     require('views/header.php')
     ?>
@@ -53,539 +53,62 @@ require('config.php');
         <div class="container">
             <div class="cab-menu-content-box">
                 <ul class="nav nav-pills v2" role="tablist">
-                    <li class="active">
-                        <a href="#menu1" aria-controls="menu1" role="tab" data-toggle="tab">
-                            <i class="flaticon-cocktail-1"></i>
-                            <span>Starters</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#menu2" aria-controls="menu2" role="tab" data-toggle="tab">
-                            <i class="flaticon-restaurant"></i>
-                            <span>Breakfast</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#menu3" aria-controls="menu3" role="tab" data-toggle="tab">
-                            <i class="flaticon-order"></i>
-                            <span>Dinner</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#menu4" aria-controls="menu4" role="tab" data-toggle="tab">
-                            <i class="flaticon-jamaican-jerk-chicken"></i>
-                            <span>Meat</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#menu5" aria-controls="menu5" role="tab" data-toggle="tab">
-                            <i class="flaticon-cup-cake"></i>
-                            <span>Desserts</span>
-                        </a>
-                    </li>
+                    <?php
+                    $query = 'SELECT * FROM categories';
+                    $stmt = $pdo->query($query);
+                    $i = 0;
+                    while ($row = $stmt->fetch()) {
+                        $i++;
+                    ?>
+                        <li class="<?php if ($i == 1) echo 'active'?>">
+                            <a href="#<?php echo $row['slug'] ?>" aria-controls="<?php echo $row['slug'] ?>" role="tab" data-toggle="tab">
+                                <i class="flaticon-order"></i>
+                                <span><?php echo $row['title'] ?></span>
+                            </a>
+                        </li>
+                    <?php
+                    }
+                    ?>
                 </ul>
 
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade in active" id="menu1">
+                    <?php
+                    $query = 'SELECT * FROM categories';
+                    $stmt = $pdo->query($query);
+                    $i = 0;
+                    while ($row = $stmt->fetch()) {
+                        $i++;
+                    ?>
+                    <div role="tabpanel" class="tab-pane fade in <?php if ($i == 1) echo 'active'?>" id="<?php echo $row['slug'] ?>">
                         <div class="row">
-                            <div class="col-sm-6 p-0">
+                            <div class="col-sm-10 col-sm-offset-1 p-0">
                                 <div class="cab-menu-list">
+                                    <?php
+                                    $query2 = "SELECT * FROM menu WHERE category_id = ".$row['id']." AND display_status='Y'";
+                                    $stmt2 = $pdo->query($query2);
+                                    while ($menu_item = $stmt2->fetch()) {
+                                    ?>
                                     <div class="cab-menu-item clearfix">
                                         <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
+                                            <h6><?php echo $menu_item['title'] ?></h6>
+                                            <p><?php echo $menu_item['description'] ?></p>
                                         </div>
                                         <div class="menu-price">
                                             <span class="price-tag">
-                                                45$
+                                                $<?php echo $menu_item['price'] ?>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                35$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                144$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list list-second">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Kasi fride ullu checken</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                37$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                250$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="menu2">
-                        <div class="row">
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                35$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                144$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list list-second">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Kasi fride ullu checken</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                37$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                250$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="menu3">
-                        <div class="row">
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                35$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                144$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list list-second">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Kasi fride ullu checken</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                37$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                250$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="menu4">
-                        <div class="row">
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                35$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                144$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list list-second">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Kasi fride ullu checken</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                37$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                250$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="menu5">
-                        <div class="row">
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                35$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                144$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Shitake Mushroom Maaki <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 p-0">
-                                <div class="cab-menu-list list-second">
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Kasi fride ullu checken</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                37$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                250$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Voctimulok vegitable</h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                45$
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="cab-menu-item clearfix">
-                                        <div class="menu-title">
-                                            <h6>Donalt best food envo <span class="tag-new">New</span></h6>
-                                            <p>Ruccola, Roasted Garlic Bread Cheese,Peppers</p>
-                                        </div>
-                                        <div class="menu-price">
-                                            <span class="price-tag">
-                                                17$
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                    }
+                    ?>
                 </div>
 
             </div>

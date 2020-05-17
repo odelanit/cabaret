@@ -15,23 +15,6 @@ require('config.php');
 </head>
 
 <body id="bodyTop">
-
-    <!-- Cab Search Box Starts Here -->
-    <div class="cab-search-overlay">
-        <div class="cab-search-inner">
-            <div class="search-form">
-                <span class="close-search-overlay">
-                    <i class="ti-close"></i>
-                </span>
-                <form>
-                    <input type="text" placeholder="search here">
-                    <button type="submit" class="">Search</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Cab Search Box Ends Here -->
-
     <?php require_once('views/header.php');
     ?>
 

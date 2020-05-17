@@ -22,7 +22,7 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$display_status = 0;
+$display_status = 'N';
 if ($_POST['display_status']) {
     $display_status = $_POST['display_status'];
 }

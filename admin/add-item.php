@@ -109,7 +109,7 @@ require_once('../views/sidebar.php')
                         <div class="field">
                             <label for="display_status">Display Status</label>
                             <div class="ui checkbox">
-                                <input type="checkbox" name="display_status" id="display_status" value="1">
+                                <input type="checkbox" name="display_status" id="display_status" value="Y">
                                 <label>Y/N</label>
                             </div>
                         </div>

@@ -3,29 +3,7 @@ require_once('../helpers.php');
 if (!checkUser()) {
     header('Location: /login.php');
 }
-require_once('../config.php');
-
-$host = '127.0.0.1';
-$port = "3306";
-$charset = 'utf8mb4';
-
-$options = [
-    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-    \PDO::ATTR_EMULATE_PREPARES   => false,
-];
-$dsn = sprintf("mysql:host=%s;dbname=%s;charset=%s;port=%s", $host, DB_NAME, $charset, $port);
-try {
-    $pdo = new \PDO($dsn, DB_USER, DB_PASSWORD, $options);
-} catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
-}
-
-$query = 'SELECT * FROM events WHERE id=:id';
-$stmt = $pdo->prepare($query);
-$stmt->execute(['id' => $_GET['id']]);
-$single_row = $stmt->fetch();
-
+require_once('../config.php')
 ?>
 <!doctype html>
 <html lang="en">
@@ -43,14 +21,12 @@ $single_row = $stmt->fetch();
     <link rel="shortcut icon" href="#">
 
     <link rel="stylesheet" href="/assets/admin/bootstrap-4.4.1/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/admin/jquery-ui-1.12.1/jquery-ui.min.css">
     <link rel="stylesheet" href="/assets/admin/semantic-ui/semantic.min.css">
     <link rel="stylesheet" href="/assets/admin/fontawesome-pro/css/all.min.css">
     <link rel="stylesheet" href="/assets/admin/dropzone-5.7.0/dropzone.min.css">
     <link rel="stylesheet" href="/assets/admin/dropzone-5.7.0/basic.css">
 
     <script type="text/javascript" src="/assets/admin/jquery-3.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/assets/admin/jquery-ui-1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/assets/admin/bootstrap-4.4.1/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/assets/admin/semantic-ui/semantic.min.js"></script>
     <script type="text/javascript" src="/assets/admin/dropzone-5.7.0/dropzone.min.js"></script>
@@ -71,48 +47,28 @@ require_once('../views/sidebar.php')
         <div class="ui breadcrumb">
             <a href="/admin/index.php" class="section">Home</a>
             <div class="divider"> / </div>
-            <a href="/admin/events.php" class="section">Events</a>
+            <a href="/admin/home-news.php" class="section">Home News</a>
             <div class="divider"> / </div>
-            <div class="active section"><?php echo $single_row['id'] ?></div>
+            <div class="active section">Add</div>
         </div>
         <div class="row mt-4">
             <div class="col-md-8">
                 <div class="ui segment">
-                    <form class="ui form" action="/actions/update-event.php?id=<?php echo $single_row['id'] ?>" method="post">
+                    <form class="ui form" action="/actions/create-home-news.php" method="post">
                         <div class="field">
                             <label for="title">Title</label>
-                            <input type="text" name="title" id="title" required value="<?php echo $single_row['title'] ?>">
+                            <input type="text" name="title" id="title" required>
                         </div>
                         <div class="field">
                             <label>Image</label>
                             <div class="dropzone" id="imageDropzone">
-                                <img src="<?php echo $single_row['image_url'] ?>" id="image_preview" class="image-preview">
+                                <img src="" id="image_preview" class="image-preview">
                             </div>
-                            <input type="hidden" name="image_url" id="image_url" value="<?php echo $single_row['image_url'] ?>">
+                            <input type="hidden" name="image_url" id="image_url">
                         </div>
                         <div class="field">
                             <label for="description">Content</label>
-                            <textarea name="description" id="description" required><?php echo $single_row['description'] ?></textarea>
-                        </div>
-                        <div class="field">
-                            <label for="open_date">Date</label>
-                            <input type="text" name="open_date" id="open_date"
-                                   value="<?php
-                                   $create_date = strtotime($single_row['open_date']);
-                                   echo date('m/d/Y', $create_date);
-                                   ?>"
-                                   required>
-                        </div>
-                        <div class="field">
-                            <label for="location">Location</label>
-                            <input type="text" name="location" id="location" value="<?php echo $single_row['location'] ?>" required>
-                        </div>
-                        <div class="field">
-                            <label for="display_status">Display Status</label>
-                            <div class="ui checkbox">
-                                <input type="checkbox" name="display_status" id="display_status" value="Y" <?php if ($single_row['display_status'] == 'Y') echo 'checked'?>>
-                                <label>Y/N</label>
-                            </div>
+                            <textarea name="description" id="description" required></textarea>
                         </div>
                         <button class="ui primary button">Save</button>
                     </form>
@@ -144,8 +100,6 @@ require_once('../views/sidebar.php')
                 return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
             }
         });
-    $('.ui.checkbox').checkbox();
-    $('#open_date').datepicker();
 </script>
 </body>
 </html>

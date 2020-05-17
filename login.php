@@ -47,36 +47,53 @@ require_once('config.php')
             </form>
             <div class="ui form mt-3">
                 <div class="field">
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                    <button class="ui google plus button w-100" type="button" id="google-login-button"><i class="google icon"></i>Sign in with Google</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+<!--<script src="https://apis.google.com/js/platform.js" async defer></script>-->
+<script src="https://apis.google.com/js/api:client.js"></script>
 <script>
-    function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        var id_token = googleUser.getAuthResponse().id_token;
-        console.log('Token:' + id_token);
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-        $.ajax({
-            type: 'POST',
-            url: '/actions/google-login.php',
-            data: {
-                id_token: id_token
-            },
-            success: function (data) {
-                window.location.href = '/admin/';
-            },
-            error: function (xhr, statusCode, error) {
-                console.log(error);
-            }
+    var googleUser = {};
+    var startApp = function() {
+        gapi.load('auth2', function(){
+            // Retrieve the singleton for the GoogleAuth library and set up the client.
+            auth2 = gapi.auth2.init({
+                client_id: '483415670904-rlrnh76d3n8pd3eq2qf11a0kj9r45njb.apps.googleusercontent.com',
+                cookiepolicy: 'single_host_origin',
+                // Request scopes in addition to 'profile' and 'email'
+                //scope: 'additional_scope'
+            });
+            attachSignin(document.getElementById('google-login-button'));
         });
+    };
+    function attachSignin(element) {
+        console.log(element.id);
+        auth2.attachClickHandler(element, {},
+            function(googleUser) {
+                var profile = googleUser.getBasicProfile();
+                var id_token = googleUser.getAuthResponse().id_token;
+                $.ajax({
+                    type: 'POST',
+                    url: '/actions/google-login.php',
+                    data: {
+                        id_token: id_token
+                    },
+                    success: function (data) {
+                        window.location.href = '/admin/';
+                    },
+                    error: function (xhr, statusCode, error) {
+                        console.log(error);
+                    }
+                });
+            }, function(error) {
+                alert(JSON.stringify(error, undefined, 2));
+            });
     }
+
+    startApp();
 </script>
 </body>
 </html>

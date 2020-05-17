@@ -20,7 +20,7 @@ try {
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-$query = 'SELECT * FROM news WHERE is_home=0';
+$query = 'SELECT * FROM news WHERE is_home=1';
 $stmt = $pdo->query($query);
 ?>
 <!doctype html>
@@ -65,14 +65,14 @@ require_once('../views/sidebar.php')
         <div class="ui breadcrumb">
             <a href="/admin/index.php" class="section">Home</a>
             <div class="divider"> / </div>
-            <div class="section active">News</div>
+            <div class="section active">Home News</div>
         </div>
         <div class="row mt-4">
             <div class="col-md-12">
                 <div>
                     <h3 class="ui left floated header">News</h3>
                     <h5 class="ui right floated header">
-                        <a href="/admin/add-news.php"><i class="plus icon"></i>Add News</a>
+                        <a href="/admin/add-home-news.php"><i class="plus icon"></i>Add News</a>
                     </h5>
                 </div>
                 <table class="ui table">
@@ -99,8 +99,8 @@ require_once('../views/sidebar.php')
                             <td><?php echo $row['description'] ?></td>
                             <td><?php echo $row['created_at'] ?></td>
                             <td>
-                                <a href="/admin/edit-news.php?id=<?php echo $row['id'] ?>" title="Edit"><i class="edit icon"></i></a>
-                                <a href="/admin/delete-news.php?id=<?php echo $row['id'] ?>" title="Delete"><i class="trash red icon"></i></a>
+                                <a href="/admin/edit-home-news.php?id=<?php echo $row['id'] ?>" title="Edit"><i class="edit icon"></i></a>
+                                <a href="/admin/delete-home-news.php?id=<?php echo $row['id'] ?>" title="Delete"><i class="trash red icon"></i></a>
                             </td>
                         </tr>
                         <?php

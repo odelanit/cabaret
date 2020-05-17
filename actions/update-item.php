@@ -22,8 +22,8 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$display_status = 0;
-if ($_POST['display_status']) {
+$display_status = 'N';
+if ($_POST['display_status'] == 'Y') {
     $display_status = $_POST['display_status'];
 }
 

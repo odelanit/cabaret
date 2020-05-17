@@ -3,6 +3,10 @@
         <i class="home icon"></i>
         Home
     </a>
+    <a class="item <?php if(is_url('/admin/home-news.php') || is_url('/admin/add-home-news.php') || is_url('/admin/edit-home-news.php')) echo 'active' ?>" href="/admin/home-news.php">
+        <i class="rss icon"></i>
+        Home News
+    </a>
     <a class="item <?php if(is_url('/admin/news.php') || is_url('/admin/add-news.php') || is_url('/admin/edit-news.php')) echo 'active' ?>" href="/admin/news.php">
         <i class="rss icon"></i>
         News

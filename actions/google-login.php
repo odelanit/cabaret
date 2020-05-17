@@ -30,26 +30,29 @@ if ($payload) {
         $payload['email']
     ]);
     $user = $stmt->fetch();
+    list($user, $domain) = explode('@', $payload['email']);
 
-    if ($user) {
+    if ($user && $domain == 'iu.edu') {
         $_SESSION['user'] = $user['id'];
     } else {
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $random_password = substr(str_shuffle($permitted_chars), 0, 16);
-        $query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-        $stmt = $pdo->prepare($query);
-        $result = $stmt->execute([
-            $payload['name'],
-            $payload['email'],
-            password_hash($random_password, PASSWORD_DEFAULT)
-        ]);
+        if ($domain == 'iu.edu') {
+            $query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+            $stmt = $pdo->prepare($query);
+            $result = $stmt->execute([
+                $payload['name'],
+                $payload['email'],
+                password_hash($random_password, PASSWORD_DEFAULT)
+            ]);
 
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
-        $stmt->execute([
-            $payload['email']
-        ]);
-        $user = $stmt->fetch();
-        $_SESSION['user'] = $user['id'];
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
+            $stmt->execute([
+                $payload['email']
+            ]);
+            $user = $stmt->fetch();
+            $_SESSION['user'] = $user['id'];
+        }
     }
 
     $data = [

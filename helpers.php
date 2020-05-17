@@ -32,7 +32,7 @@ function login($email, $password) {
         $email
     ]);
     $user = $stmt->fetch();
-    if ($user && password_verify($_POST['password'], $user['password'])) {
+    if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user'] = $user['id'];
         return true;
     } else {

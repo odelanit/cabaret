@@ -113,7 +113,7 @@ require_once('../views/sidebar.php')
                         <div class="field">
                             <label for="display_status">Display Status</label>
                             <div class="ui checkbox">
-                                <input type="checkbox" name="display_status" id="display_status" value="1" <?php if ($single_row['display_status'] == 1) echo 'checked' ?>>
+                                <input type="checkbox" name="display_status" id="display_status" value="Y" <?php if ($single_row['display_status'] == 'Y') echo 'checked' ?>>
                                 <label>Y/N</label>
                             </div>
                         </div>

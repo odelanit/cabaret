@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `news` (
     title VARCHAR(191) NOT NULL,
     description TEXT,
     image_url VARCHAR(191),
+    is_home TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
     price DECIMAL(8,2) DEFAULT 0.0,
     description TEXT,
     image_url VARCHAR(191),
-    display_status BOOLEAN DEFAULT false,
+    display_status VARCHAR(1) DEFAULT 'N',
     category_id BIGINT UNSIGNED NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -38,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `events` (
     image_url VARCHAR(191),
     open_date DATE,
     location VARCHAR(191),
-    display_status BOOLEAN DEFAULT false,
+    display_status VARCHAR(1) DEFAULT 'N',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)

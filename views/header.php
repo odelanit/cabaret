@@ -83,6 +83,11 @@ require_once('config.php');
                             Contact Us.
                         </a>
                     </li>
+                    <li>
+                        <a href="/login.php" style="background: #dd4b39; color: white; border-radius: 5px; text-decoration: none;">
+                            Login
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -115,7 +120,7 @@ require_once('config.php');
                 <li>
                     <a href="/news.php"
                         <?php
-                        if (is_url('/news.php')) {
+                        if (is_url('/news.php') || is_url('/single-news.php')) {
                             echo 'class="active"';
                         }
                         ?>
@@ -150,6 +155,11 @@ require_once('config.php');
                         ?>
                     >
                         Contact Us.
+                    </a>
+                </li>
+                <li>
+                    <a href="/login.php" style="background: #dd4b39; color: white; border-radius: 5px; text-decoration: none;">
+                        Login
                     </a>
                 </li>
             </ul>
