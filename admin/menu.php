@@ -20,7 +20,7 @@ try {
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-$query = 'SELECT * FROM menu';
+$query = 'SELECT menu.*, c.title as category FROM menu LEFT JOIN categories c on menu.category_id = c.id';
 $stmt = $pdo->query($query);
 
 ?>
@@ -103,7 +103,7 @@ require_once('../views/sidebar.php')
                                 <img class="img-fluid img-thumbnail" src="<?php echo $row['image_url'] ?>" alt="">
                             </td>
                             <td><?php echo $row['display_status'] ?></td>
-                            <td><?php echo $row['category_id'] ?></td>
+                            <td><?php echo $row['category'] ?></td>
                             <td><?php echo $row['created_at'] ?></td>
                             <td>
                                 <a href="/admin/edit-item.php?id=<?php echo $row['id'] ?>" title="Edit"><i class="edit icon"></i></a>
